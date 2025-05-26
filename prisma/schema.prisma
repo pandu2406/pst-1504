@@ -24,14 +24,14 @@ enum QueueStatus {
   COMPLETED
   CANCELED
 
-  @@map("queueStatus")
+  @@map("queuestatus")
 }
 
 enum ServiceStatus {
   ACTIVE
   INACTIVE
 
-  @@map("serviceStatus")
+  @@map("servicestatus")
 }
 
 model User {

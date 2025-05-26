@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth"; // Updated import path
 import { createHash } from "crypto";
 import prisma from "@/lib/prisma"; // Import shared prisma instance
-import { QueueStatus, Prisma } from "@/generated/prisma"; // Add this import
+import { QueueStatus, Prisma } from "@prisma/client"; // Add this import
 
 // Function to generate a hash of queue data to detect changes
 function generateQueueHash(queues: Record<string, unknown>[]): string {

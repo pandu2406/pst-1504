@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import prisma from "@/lib/prisma";
-import { QueueStatus, Prisma } from "@/generated/prisma";
+import { QueueStatus, Prisma } from "@prisma/client";
 
 // Function to generate a hash of queue data to detect changes
 function generateQueueHash(data: Record<string, unknown>): string {

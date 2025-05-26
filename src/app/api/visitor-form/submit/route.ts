@@ -1,4 +1,4 @@
-import { PrismaClient, QueueStatus, QueueType } from "@/generated/prisma";
+import { PrismaClient, QueueStatus, QueueType } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { nanoid } from "nanoid";
 

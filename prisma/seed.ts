@@ -1,4 +1,4 @@
-import { PrismaClient, Role, ServiceStatus } from "@/generated/prisma";
+import { PrismaClient, Role, ServiceStatus } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 // import { v4 as uuidv4 } from "uuid";
 import * as fs from "fs";

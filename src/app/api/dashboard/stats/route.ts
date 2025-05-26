@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth"; // Updated import path
 import crypto from "crypto";
 import prisma from "@/lib/prisma"; // Import shared prisma instance
-import { QueueStatus } from "@/generated/prisma"; // Add this import
+import { QueueStatus } from "@prisma/client"; // Add this import
 
 export async function GET(request: Request) {
 	try {

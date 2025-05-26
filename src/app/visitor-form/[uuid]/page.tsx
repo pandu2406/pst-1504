@@ -30,7 +30,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { SelectTrigger } from "@/app/visitor-form/visitor-form-select";
-import { ServiceStatus } from "@/generated/prisma";
+import { ServiceStatus } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import {
     AlertCircle,

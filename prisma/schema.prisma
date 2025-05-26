@@ -24,7 +24,6 @@ enum QueueStatus {
   COMPLETED
   CANCELED
 
-  @@map("queuestatus")
   @@map("queueStatus")
 }
 
@@ -32,7 +31,6 @@ enum ServiceStatus {
   ACTIVE
   INACTIVE
 
-  @@map("servicestatus")
   @@map("serviceStatus")
 }
 
@@ -78,7 +76,6 @@ enum QueueType {
   ONLINE
   OFFLINE
 
-  @@map("queuetype")
   @@map("queueType")
 }
 
@@ -125,7 +122,6 @@ model TempVisitorLink {
   updatedAt DateTime @updatedAt
   used      Boolean  @default(false)
 
-  @@map("tempvisitorlink")
   @@map("tempVisitorLink")
 }
 

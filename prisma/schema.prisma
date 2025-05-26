@@ -23,11 +23,15 @@ enum QueueStatus {
   SERVING
   COMPLETED
   CANCELED
+
+  @@map("queuestatus")
 }
 
 enum ServiceStatus {
   ACTIVE
   INACTIVE
+
+  @@map("servicestatus")
 }
 
 model User {
@@ -71,6 +75,8 @@ model Visitor {
 enum QueueType {
   ONLINE
   OFFLINE
+
+  @@map("queuetype")
 }
 
 model Queue {

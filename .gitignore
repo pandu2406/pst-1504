@@ -1,0 +1,11 @@
+# Node & Next.js ignores
+node_modules/
+.next/
+out/
+dist/
+*.zip
+*.log
+
+# Env
+.env
+.env.*

@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /pst-1504/
+
+# Serve static files directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirect all other requests to the main index.html (client-side routing)
+RewriteRule ^ server/app/index.html [L]

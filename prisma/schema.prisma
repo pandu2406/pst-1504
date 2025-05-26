@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPERADMIN
+  ADMIN
+}
+
+enum QueueStatus {
+  WAITING
+  SERVING
+  COMPLETED
+  CANCELED
+}
+
+enum ServiceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id            String         @id @default(uuid())
+  username      String         @unique
+  password      String
+  name          String
+  role          Role           @default(ADMIN)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  queues        Queue[]        @relation("AdminQueue")
+  notifications Notification[]
+}
+
+model Service {
+  id        String        @id @default(uuid())
+  name      String
+  status    ServiceStatus @default(ACTIVE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  queues    Queue[]
+}
+
+model Visitor {
+  id          String   @id @default(uuid())
+  name        String
+  phone       String
+  institution String?
+  email       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  queues      Queue[]
+}
+
+enum QueueType {
+  ONLINE
+  OFFLINE
+}
+
+model Queue {
+  id           String      @id @default(uuid())
+  queueNumber  Int
+  status       QueueStatus @default(WAITING)
+  queueType    QueueType   @default(OFFLINE)
+  visitorId    String
+  visitor      Visitor     @relation(fields: [visitorId], references: [id])
+  serviceId    String
+  service      Service     @relation(fields: [serviceId], references: [id])
+  adminId      String?
+  admin        User?       @relation("AdminQueue", fields: [adminId], references: [id])
+  startTime    DateTime?
+  endTime      DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  tempUuid     String?     @unique
+  filledSKD    Boolean     @default(false)
+  trackingLink String?     @unique
+
+  @@index([visitorId])
+  @@index([serviceId])
+  @@index([adminId])
+}
+
+model QRCode {
+  id         String   @id @default(uuid())
+  staticUuid String   @unique
+  path       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model TempVisitorLink {
+  id        String   @id @default(uuid())
+  uuid      String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  used      Boolean  @default(false)
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  type      String // NEW_QUEUE, REMINDER_SKD, etc.
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String? // Optional, if notification is targeted to specific user
+  user      User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}

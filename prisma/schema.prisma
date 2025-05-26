@@ -14,6 +14,8 @@ generator client {
 enum Role {
   SUPERADMIN
   ADMIN
+
+  @@map("role")
 }
 
 enum QueueStatus {
@@ -38,6 +40,8 @@ model User {
   updatedAt     DateTime       @updatedAt
   queues        Queue[]        @relation("AdminQueue")
   notifications Notification[]
+
+  @@map("user")
 }
 
 model Service {

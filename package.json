@@ -6,14 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build",
     "start": "next start",
-    "postinstall": "prisma generate",
     "lint": "next lint",
     "db:migrate": "prisma migrate deploy",
     "db:generate": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force",
     "db:studio": "prisma studio",
-    "test:reminder": "node scripts/test-reminder.js"
+    "test:reminder": "node scripts/test-reminder.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.9.0",

@@ -9,60 +9,63 @@ export async function POST(req: NextRequest) {
 		const data = await req.json();
 		const { name, phone, institution, email, serviceId, tempUuid, queueType } = data;
 
-		// Validasi input
+		// Validasi field
 		if (!name || !phone || !serviceId || !tempUuid || !queueType) {
-			return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Missing required fields" },
+				{ status: 400 }
+			);
 		}
 
-		// Validasi queueType
-		const queueTypeEnum =
-			queueType === "ONLINE" ? QueueType.ONLINE :
-			queueType === "OFFLINE" ? QueueType.OFFLINE : null;
-
-		if (!queueTypeEnum) {
-			return NextResponse.json({ error: "Invalid queue type" }, { status: 400 });
-		}
-
-		// Cek apakah serviceId valid
-		const service = await prisma.service.findUnique({
-			where: { id: serviceId },
-		});
-		if (!service) {
-			return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
-		}
-
-		// Cek apakah tempUuid valid dan belum digunakan
+		// Cek tempUuid
 		const tempVisitorLink = await prisma.tempVisitorLink.findUnique({
 			where: { uuid: tempUuid },
 		});
+
 		if (!tempVisitorLink) {
-			return NextResponse.json({ error: "Invalid temporary link" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "Invalid temporary link" },
+				{ status: 400 }
+			);
 		}
+
 		if (tempVisitorLink.used) {
-			return NextResponse.json({ error: "This form has already been submitted" }, { status: 400 });
+			return NextResponse.json(
+				{ error: "This form has already been submitted" },
+				{ status: 400 }
+			);
 		}
+
 		if (new Date() > tempVisitorLink.expiresAt) {
 			return NextResponse.json({ error: "Link has expired" }, { status: 400 });
 		}
 
-		// Ambil antrean terakhir hari ini
+		// Ambil antrean terbaru hari ini
 		const today = new Date();
 		today.setHours(0, 0, 0, 0);
 
 		const latestQueue = await prisma.queue.findFirst({
 			where: {
-				createdAt: { gte: today },
+				createdAt: {
+					gte: today,
+				},
 			},
 			orderBy: {
 				queueNumber: "desc",
 			},
 		});
+
 		const nextQueueNumber = latestQueue ? latestQueue.queueNumber + 1 : 1;
 
-		// Transaksi buat visitor dan antrean
+		// Transaksi
 		const result = await prisma.$transaction(async (tx) => {
 			const visitor = await tx.visitor.create({
-				data: { name, phone, institution, email },
+				data: {
+					name,
+					phone,
+					institution,
+					email,
+				},
 			});
 
 			const trackingLink = nanoid(10);
@@ -71,11 +74,11 @@ export async function POST(req: NextRequest) {
 				data: {
 					queueNumber: nextQueueNumber,
 					status: QueueStatus.WAITING,
-					queueType: queueTypeEnum,
+					queueType: queueType === "ONLINE" ? QueueType.ONLINE : QueueType.OFFLINE,
 					visitorId: visitor.id,
 					serviceId,
-					tempUuid,
-					trackingLink,
+					tempUuid: tempUuid,
+					trackingLink: trackingLink,
 					filledSKD: false,
 				},
 				include: {
@@ -98,7 +101,9 @@ export async function POST(req: NextRequest) {
 				data: {
 					type: "NEW_QUEUE",
 					title: "Antrean Baru",
-					message: `Antrean baru #${queue.queueNumber}-${formatQueueDate(queue.createdAt)} (${queue.queueType === "ONLINE" ? "Online" : "Offline"}) dari ${visitor.name} untuk layanan ${queue.service.name}`,
+					message: `Antrean baru #${queue.queueNumber}-${formatQueueDate(
+						new Date(queue.createdAt)
+					)} (${queue.queueType === "ONLINE" ? "Online" : "Offline"}) dari ${visitor.name} untuk layanan ${queue.service.name}`,
 					isRead: false,
 				},
 			});
@@ -118,10 +123,16 @@ export async function POST(req: NextRequest) {
 				redirectUrl: `/visitor-form/${tempUuid}`,
 			},
 		});
-	} catch (error: any) {
+	} catch (error: unknown) {
 		console.error("Error submitting visitor form:", error);
+
+		let message = "Failed to process visitor form";
+		if (error instanceof Error) {
+			message = error.message;
+		}
+
 		return NextResponse.json(
-			{ error: "Failed to process visitor form", detail: error?.message || String(error) },
+			{ success: false, error: message },
 			{ status: 500 }
 		);
 	} finally {

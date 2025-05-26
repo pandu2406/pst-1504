@@ -51,6 +51,8 @@ model Service {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   queues    Queue[]
+
+  @@map("service")
 }
 
 model Visitor {
@@ -62,6 +64,8 @@ model Visitor {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   queues      Queue[]
+
+  @@map("visitor")
 }
 
 enum QueueType {
@@ -88,6 +92,7 @@ model Queue {
   filledSKD    Boolean     @default(false)
   trackingLink String?     @unique
 
+  @@map("queue")
   @@index([visitorId])
   @@index([serviceId])
   @@index([adminId])
@@ -99,6 +104,8 @@ model QRCode {
   path       String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@map("qrcode")
 }
 
 model TempVisitorLink {
@@ -108,6 +115,8 @@ model TempVisitorLink {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   used      Boolean  @default(false)
+
+  @@map("tempvisitorlink")
 }
 
 model Notification {
@@ -121,5 +130,6 @@ model Notification {
   userId    String? // Optional, if notification is targeted to specific user
   user      User?    @relation(fields: [userId], references: [id])
 
+  @@map("notification")
   @@index([userId])
 }

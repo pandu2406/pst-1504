@@ -76,7 +76,7 @@ enum QueueType {
   ONLINE
   OFFLINE
 
-  @@map("queueType")
+  @@map("queuetype")
 }
 
 model Queue {
@@ -122,7 +122,7 @@ model TempVisitorLink {
   updatedAt DateTime @updatedAt
   used      Boolean  @default(false)
 
-  @@map("tempVisitorLink")
+  @@map("tempvisitorlink")
 }
 
 model Notification {

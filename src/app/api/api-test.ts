@@ -1,14 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export async function GET() {
   try {
-    // Contoh query sederhana untuk cek koneksi, misal hitung jumlah user
     const count = await prisma.user.count();
-    res.status(200).json({ success: true, userCount: count });
+    return NextResponse.json({ success: true, userCount: count });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    const err = error as Error;
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
 }

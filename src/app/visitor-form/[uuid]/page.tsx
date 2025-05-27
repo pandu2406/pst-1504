@@ -543,7 +543,7 @@ export default function VisitorFormPage({
                                     </div>
                                 </div>
                             )}{" "}
-                            {/* SKD Form section - show for all queue statuses */}
+                            {trackingInfo.status === "COMPLETED" && (
                             <Alert className="bg-blue-50 text-blue-900">
                                 <AlertCircle className="border-blue-900 w-5 h-5" />
                                 <AlertTitle className="text-blue-800">
@@ -574,6 +574,7 @@ export default function VisitorFormPage({
                                     )}
                                 </div>
                             </Alert>
+                            )} 
                         </div>
                     </CardContent>{" "}
                     <CardFooter className="flex justify-center">

@@ -1,9 +1,5 @@
 # pst-1504
 
-Aplikasi antrean digital untuk layanan PST BPS Kabupaten Buton Selatan. Proyek ini dibangun menggunakan Next.js (App Router), Prisma ORM, dan Bun sebagai package manager & runtime. Mendukung integrasi WhatsApp Bot untuk notifikasi antrean.
-
----
-
 ## Fitur Utama
 - Formulir pengunjung untuk mengambil nomor antrean
 - Tracking status antrean secara real-time
